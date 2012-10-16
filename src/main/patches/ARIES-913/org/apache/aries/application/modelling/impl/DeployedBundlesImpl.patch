@@ -1,0 +1,40 @@
+28,29d27
+< import java.util.HashMap;
+< import java.util.HashSet;
+30a29,30
+> import java.util.LinkedHashMap;
+> import java.util.LinkedHashSet;
+61c61
+<   private final Set<ImportedBundle> appContent = new HashSet<ImportedBundle>();
+---
+>   private final Set<ImportedBundle> appContent = new LinkedHashSet<ImportedBundle>();
+63c63
+<   private final Set<ImportedBundle> appUseBundle = new HashSet<ImportedBundle>();
+---
+>   private final Set<ImportedBundle> appUseBundle = new LinkedHashSet<ImportedBundle>();
+65c65
+<   private final Set<ModelledResource> deployedContent = new HashSet<ModelledResource>();
+---
+>   private final Set<ModelledResource> deployedContent = new LinkedHashSet<ModelledResource>();
+67c67
+<   private final Set<ModelledResource> deployedUseBundle = new HashSet<ModelledResource>();
+---
+>   private final Set<ModelledResource> deployedUseBundle = new LinkedHashSet<ModelledResource>();
+69c69
+<   private final Set<ModelledResource> deployedProvisionBundle = new HashSet<ModelledResource>();
+---
+>   private final Set<ModelledResource> deployedProvisionBundle = new LinkedHashSet<ModelledResource>();
+71,72c71,72
+<   private final Collection<ImportedService> deployedImportService = new HashSet<ImportedService>(); 
+<   private final Collection<ModelledResource> fakeDeployedBundles = new HashSet<ModelledResource>();
+---
+>   private final Collection<ImportedService> deployedImportService = new LinkedHashSet<ImportedService>(); 
+>   private final Collection<ModelledResource> fakeDeployedBundles = new LinkedHashSet<ModelledResource>();
+199c199
+<     Map<ImportedPackage,ExportedPackage> useBundlePkgs = new HashMap<ImportedPackage,ExportedPackage>();
+---
+>     Map<ImportedPackage,ExportedPackage> useBundlePkgs = new LinkedHashMap<ImportedPackage,ExportedPackage>();
+444c444
+<     Collection<ModelledResource> usedUseBundles = new HashSet<ModelledResource>();
+---
+>     Collection<ModelledResource> usedUseBundles = new LinkedHashSet<ModelledResource>();

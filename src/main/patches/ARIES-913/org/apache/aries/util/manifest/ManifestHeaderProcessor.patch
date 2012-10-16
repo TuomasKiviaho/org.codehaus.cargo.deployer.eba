@@ -1,0 +1,105 @@
+23c23
+< import java.util.HashMap;
+---
+> import java.util.Collections;
+24a25
+> import java.util.LinkedHashMap;
+49,50c50,51
+<     private final Map<String, Object> attributes = new HashMap<String, Object>();
+<     private final Map<String, String> directives = new HashMap<String, String>();
+---
+>     private final Map<String, Object> attributes = new LinkedHashMap<String, Object>();
+>     private final Map<String, String> directives = new LinkedHashMap<String, String>();
+154c155
+<   public static class NameValueMap extends HashMap<String, Map<String,String>> implements NameValueCollection, Map<String, Map<String,String>>{
+---
+>   public static class NameValueMap extends LinkedHashMap<String, Map<String,String>> implements NameValueCollection, Map<String, Map<String,String>>{
+244c245
+<       params = new HashMap<String, String>();
+---
+>       params = new LinkedHashMap<String, String>();
+305c306
+<     Map<String,String> params = new HashMap<String,String>();
+---
+>     Map<String,String> params = new LinkedHashMap<String,String>();
+544c545
+< 			attribs = new HashMap<String, String>();
+---
+> 			attribs = Collections.emptyMap();
+703c704
+<     Map<String, String> result = new HashMap<String, String>();
+---
+>     Map<String, String> result = new LinkedHashMap<String, String>();
+721a723,728
+>           value = null;
+>         } else if (GREATER_EQ_OP.equals(op)) {
+>           lowerVersion = value;
+>         } else if (LESS_EQ_OP.equals(op)) {
+>           upperVersion = value;
+>           value = null;
+723,728c730
+<           if (GREATER_EQ_OP.equals(op))
+<             lowerVersion = value;
+<           else if (LESS_EQ_OP.equals(op))
+<             upperVersion = value;
+<           else
+<             throw new IllegalArgumentException();
+---
+>           throw new IllegalArgumentException(m.group());
+735a738,743
+>           value = null;
+>         } else if (GREATER_EQ_OP.equals(op)) {
+>           lowerBundleVersion = value;
+>         } else if (LESS_EQ_OP.equals(op)) {
+>           upperBundleVersion = value;
+>           value = null;
+737,742c745
+<           if (GREATER_EQ_OP.equals(op))
+<             lowerBundleVersion = value;
+<           else if (LESS_EQ_OP.equals(op))
+<             upperBundleVersion = value;
+<           else
+<             throw new IllegalArgumentException();
+---
+>           throw new IllegalArgumentException(m.group());
+744c747,748
+<       } else {
+---
+>       }
+>       if (result.get(attr) == null) {
+749c753
+<     if (lowerVersion != null) {
+---
+>     if (lowerVersion != null && upperVersion != null) {
+751,755c755,757
+<       if (upperVersion != null) {
+<         versionAttr.append(",").append(upperVersion).insert(0,
+<             negatedVersions.contains(lowerVersion) ? '(' : '[').append(
+<             negatedVersions.contains(upperVersion) ? ')' : ']');
+<       }
+---
+>       versionAttr.append(",").append(upperVersion).insert(0,
+>           negatedVersions.contains(lowerVersion) ? '(' : '[').append(
+>           negatedVersions.contains(upperVersion) ? ')' : ']');
+757a760,761
+>     } else if (result.get(Constants.VERSION_ATTRIBUTE) == null) {
+>       result.remove(Constants.VERSION_ATTRIBUTE);
+760c764
+<     if (lowerBundleVersion != null) {
+---
+>     if (lowerBundleVersion != null && upperBundleVersion != null) {
+762,767c766,769
+<       if (upperBundleVersion != null) {
+<         versionAttr.append(",").append(upperBundleVersion).insert(0,
+<             negatedBundleVersions.contains(lowerBundleVersion) ? '(' : '[')
+<             .append(
+<                 negatedBundleVersions.contains(upperBundleVersion) ? ')' : ']');
+<       }
+---
+>       versionAttr.append(",").append(upperBundleVersion).insert(0,
+>           negatedBundleVersions.contains(lowerBundleVersion) ? '(' : '[')
+>           .append(
+>               negatedBundleVersions.contains(upperBundleVersion) ? ')' : ']');
+769a772,773
+>     } else if (result.get(Constants.BUNDLE_VERSION_ATTRIBUTE) == null) {
+>       result.remove(Constants.BUNDLE_VERSION_ATTRIBUTE);  

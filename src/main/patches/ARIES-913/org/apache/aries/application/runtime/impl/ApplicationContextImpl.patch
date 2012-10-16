@@ -1,0 +1,46 @@
+21a22
+> import java.util.ArrayDeque;
+22a24
+> import java.util.Deque;
+24,25c26,27
+< import java.util.HashMap;
+< import java.util.HashSet;
+---
+> import java.util.Iterator;
+> import java.util.LinkedHashSet;
+27d28
+< import java.util.Map;
+49c50
+<   private Map<BundleInfo, Bundle> _bundles;
+---
+>   private Deque<Bundle> _bundles;
+56c57
+<     _bundles = new HashMap<BundleInfo, Bundle>();
+---
+>     _bundles = new ArrayDeque<Bundle>();
+95c96
+<         _bundles.put(bundleInfo, bundle);        
+---
+>         _bundles.add(bundle);        
+98c99,100
+<       for (Bundle bundle : _bundles.values()) {
+---
+>       for (Iterator<Bundle> iterator = _bundles.descendingIterator(); iterator.hasNext();) {
+>         Bundle bundle = iterator.next();
+159,162c161
+<     Set<Bundle> result = new HashSet<Bundle>();
+<     for (Map.Entry<BundleInfo, Bundle> entry : _bundles.entrySet()) { 
+<       result.add (entry.getValue());
+<     }
+---
+>     Set<Bundle> result = new LinkedHashSet<Bundle>(_bundles);
+177c176
+<       for (Bundle b : _bundles.values()) { 
+---
+>       for (Bundle b : _bundles) { 
+203,204c202,203
+<     for (Map.Entry<BundleInfo, Bundle> entry : _bundles.entrySet()) { 
+<       Bundle b = entry.getValue();
+---
+>     for (Iterator<Bundle> iterator = _bundles.descendingIterator(); iterator.hasNext();) {
+>       Bundle b = iterator.next();

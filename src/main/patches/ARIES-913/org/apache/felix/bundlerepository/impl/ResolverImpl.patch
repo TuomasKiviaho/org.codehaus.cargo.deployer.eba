@@ -1,0 +1,42 @@
+35,43c35,43
+<     private final Set m_addedSet = new HashSet();
+<     private final Set m_addedRequirementSet = new HashSet();
+<     private final Set m_globalCapabilities = new HashSet();
+<     private final Set m_failedSet = new HashSet();
+<     private final Set m_resolveSet = new HashSet();
+<     private final Set m_requiredSet = new HashSet();
+<     private final Set m_optionalSet = new HashSet();
+<     private final Map m_reasonMap = new HashMap();
+<     private final Set m_unsatisfiedSet = new HashSet();
+---
+>     private final Set m_addedSet = new LinkedHashSet();
+>     private final Set m_addedRequirementSet = new LinkedHashSet();
+>     private final Set m_globalCapabilities = new LinkedHashSet();
+>     private final Set m_failedSet = new LinkedHashSet();
+>     private final Set m_resolveSet = new LinkedHashSet();
+>     private final Set m_requiredSet = new LinkedHashSet();
+>     private final Set m_optionalSet = new LinkedHashSet();
+>     private final Map m_reasonMap = new LinkedHashMap();
+>     private final Set m_unsatisfiedSet = new LinkedHashSet();
+501,505c501,503
+<         if (!result)
+<         {
+<             m_resolveSet.remove(resource);
+<             m_failedSet.add(resource);
+<         }
+---
+>         m_resolveSet.remove(resource);
+>         Set set = result ? m_resolveSet : m_failedSet;
+>         set.add(resource);
+636c636
+<                     if ((bestVersion == null) || (bestVersion.compareTo(v) < 0))
+---
+>                     if ((bestVersion == null) || (bestVersion.compareTo((Version) v) < 0))
+645c645
+<                     else if ((bestVersion != null) && (bestVersion.compareTo(v) == 0)
+---
+>                     else if ((bestVersion != null) && (bestVersion.compareTo((Version) v) == 0)
+692c692
+<         Map deployMap = new HashMap();
+---
+>         Map deployMap = new LinkedHashMap();

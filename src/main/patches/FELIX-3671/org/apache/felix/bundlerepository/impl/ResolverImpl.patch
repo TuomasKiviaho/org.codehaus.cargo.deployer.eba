@@ -1,0 +1,300 @@
+157,159c157,167
+<         // Find resources
+<         Resource[] locals = getResources(true);
+<         Resource[] remotes = getResources(false);
+---
+>     	if (s_cacheAvaiable) {
+>     		m_capabilitiesCache.clear();
+>     	}
+>     	// Find resources
+> 		Resource[] locals = getResources(true);
+> 
+> 		initCache(locals);
+> 
+> 		Resource[] remotes = getResources(false);
+> 
+> 		initCache(remotes);
+226a235,386
+>     
+>     static boolean s_cacheAvaiable = true; 
+>     
+>     private final Map m_capabilitiesCache = new HashMap(8192);
+> 
+> 	private String getKey(String filter, String prefix)
+> 	{
+> 		if (filter != null)
+> 		{
+> 			int index = filter.indexOf(prefix);
+> 			if (index > 0)
+> 			{
+> 				int end = filter.indexOf(SUFFIX, index + prefix.length());
+> 				if (end > index)
+> 				{
+> 					return filter.substring(index, end);
+> 				}
+> 			}
+> 		}
+> 		return null;
+> 	}
+> 
+> 	private String getKey(Requirement requirement)
+> 	{
+> 		String key = null;
+> 		String name = requirement.getName();
+> 		String filter = requirement.getFilter();
+> 		if (Capability.BUNDLE.equals(name))
+> 		{
+> 			key = getKey(filter, PREFIX_SYMBOLICNAME);
+> 		}
+> 		else if (Capability.PACKAGE.equals(name))
+> 		{
+> 			key = getKey(filter, PREFIX_PACKAGE);
+> 		}
+> 		else if (Capability.SERVICE.equals(name))
+> 		{
+> 			key = getKey(filter, PREFIX_SERVICE);
+> 		}
+> 		else if (Capability.FRAGMENT.equals(name))
+> 		{
+> 			key = getKey(filter, PREFIX_HOST);
+> 		}
+> 		else
+> 		{
+> 			key = PREFIX_CAPABILITY + name;
+> 		}
+> 		return key;
+> 	}
+> 
+> 	private static final String PREFIX_SYMBOLICNAME = "symbolicname=";
+> 	private static final String PREFIX_PACKAGE = "package=";
+> 	private static final String PREFIX_SERVICE = "service=";
+> 	private static final String PREFIX_HOST = "host=";
+> 	private static final String PREFIX_CAPABILITY = "capability=";
+> 	private static final char SUFFIX = ')';
+> 
+> 	private void initCache(Capability[] capabilities, Resource resource) {
+> 		if (!s_cacheAvaiable) {
+> 			return;
+> 		}
+> 		Capability cap;
+> 		Map properties;
+> 		String name;
+> 		for (int j = 0; j < capabilities.length; j++)
+> 		{
+> 			cap = capabilities[j];
+> 			String key = null;
+> 			properties = cap.getPropertiesAsMap();
+> 			name = cap.getName();
+> 			if (Capability.BUNDLE.equals(name))
+> 			{
+> 				key = PREFIX_SYMBOLICNAME + properties.get("symbolicname");
+> 			}
+> 			else if (Capability.PACKAGE.equals(name))
+> 			{
+> 				key = PREFIX_PACKAGE + properties.get("package");
+> 			}
+> 			else if (Capability.SERVICE.equals(name))
+> 			{
+> 				key = PREFIX_SERVICE + properties.get("service");
+> 			}
+> 			else if (Capability.FRAGMENT.equals(name))
+> 			{
+> 				key = PREFIX_HOST + properties.get("host");
+> 			}
+> 			else
+> 			{
+> 				key = PREFIX_CAPABILITY + name;
+> 			}
+> 
+> 			List caps = (List) m_capabilitiesCache.get(key);
+> 			if (caps == null)
+> 			{
+> 				caps = new ArrayList(2);
+> 				m_capabilitiesCache.put(key, caps);
+> 			}
+> 			caps.add(new ResourceCapabilityImpl(resource, cap));
+> 		}
+> 	}
+> 
+> 	private void initCache(Resource[] locals)
+> 	{
+> 		Resource resource;
+> 		for (int i = 0; i < locals.length; i++)
+> 		{
+> 			resource = locals[i];
+> 			Capability[] capabilities = resource.getCapabilities();
+> 			if (capabilities != null && capabilities.length > 0)
+> 			{
+> 				initCache(capabilities, resource);
+> 			}
+> 		}
+> 	}
+> 	
+> 	/**
+> 	 * Searches for resources that do meet the given requirement
+> 	 * 
+> 	 * @param req
+> 	 *            the the requirement that must be satisfied by resources
+> 	 * @param resources
+> 	 *            list of resources to look at
+> 	 * @return all resources meeting the given requirement
+> 	 */
+> 	private List searchAllResources(Requirement req, Resource[] locals, Resource[] remotes)
+> 	{
+> 		if (s_cacheAvaiable)
+> 		{
+> 			String key = getKey(req);
+> 			if (key != null) {
+> 				List matchingCapabilities = new ArrayList();
+> 				List capabilities = (List) m_capabilitiesCache.get(key);
+> 				if (capabilities != null)
+> 				{
+> 					for (int capIdx = 0, size = capabilities.size(); capIdx < size; capIdx++)
+> 					{
+> 						checkInterrupt();
+> 						ResourceCapabilityImpl capImpl = (ResourceCapabilityImpl) capabilities
+> 								.get(capIdx);
+> 						if (req.isSatisfied(capImpl.getCapability()))
+> 						{
+> 							matchingCapabilities.add(capImpl);
+> 						}
+> 					}
+> 				}
+> 				return matchingCapabilities;
+> 			}
+> 		}
+> 		List matchingCapabilities = searchResources(req, locals);
+> 		matchingCapabilities.addAll(searchResources(req, remotes));
+> 		return matchingCapabilities;
+> 	}
+274,275c434
+<                     List candidateCapabilities = searchResources(reqs[reqIdx], locals);
+<                     candidateCapabilities.addAll(searchResources(reqs[reqIdx], remotes));
+---
+>                 	List candidateCapabilities = searchAllResources(reqs[reqIdx], locals, remotes);
+352,370c511,553
+<     {
+<         for (Iterator iter = resourceSet.iterator(); iter.hasNext(); )
+<         {
+<             checkInterrupt();
+<             Resource resource = (Resource) iter.next();
+<             Capability[] caps = resource.getCapabilities();
+<             for (int capIdx = 0; (caps != null) && (capIdx < caps.length); capIdx++)
+<             {
+<                 if (req.isSatisfied(caps[capIdx]))
+<                 {
+<                     // The requirement is already satisfied an existing
+<                     // resource, return the resource.
+<                     return resource;
+<                 }
+<             }
+<         }
+< 
+<         return null;
+<     }
+---
+>     {	
+> 		if (s_cacheAvaiable)
+> 		{
+> 			String key = getKey(req);
+> 			if (key != null)
+> 			{
+> 				// Try cache first
+> 				List capabilities = (List) m_capabilitiesCache.get(key);
+> 				if (capabilities != null)
+> 				{
+> 					for (int capIdx = 0, size = capabilities.size(); capIdx < size; capIdx++)
+> 					{
+> 						ResourceCapabilityImpl capImpl = (ResourceCapabilityImpl) capabilities
+> 								.get(capIdx);
+> 						if (req.isSatisfied(capImpl.getCapability()))
+> 						{
+> 							if (resourceSet.contains(capImpl.getResource()))
+> 							{
+> 								return capImpl.getResource();
+> 							}
+> 						}
+> 					}
+> 				}
+> 				return null;
+> 			}
+> 		}
+> 		for (Iterator iter = resourceSet.iterator(); iter.hasNext();)
+> 		{
+> 			checkInterrupt();
+> 			Resource resource = (Resource) iter.next();
+> 			Capability[] caps = resource.getCapabilities();
+> 			for (int capIdx = 0; (caps != null) && (capIdx < caps.length); capIdx++)
+> 			{
+> 				if (req.isSatisfied(caps[capIdx]))
+> 				{
+> 					// The requirement is already satisfied an existing
+> 					// resource, return the resource.
+> 					return resource;
+> 				}
+> 			}
+> 		}
+> 		return null;
+> 	}
+373,380c556,584
+<      * Searches for resources that do meet the given requirement
+<      * @param req the the requirement that must be satisfied by resources
+<      * @param resources list of resources to look at
+<      * @return all resources meeting the given requirement
+<      */
+<     private List searchResources(Requirement req, Resource[] resources)
+<     {
+<         List matchingCapabilities = new ArrayList();
+---
+> 	 * Searches for resources that do meet the given requirement
+> 	 * 
+> 	 * @param req
+> 	 *            the the requirement that must be satisfied by resources
+> 	 * @param resources
+> 	 *            list of resources to look at
+> 	 * @return all resources meeting the given requirement
+> 	 */
+> 	private List searchResources(Requirement req, Resource[] resources)
+> 	{
+> 		List matchingCapabilities = new ArrayList();
+> 
+> 		for (int resIdx = 0; (resources != null) && (resIdx < resources.length); resIdx++)
+> 		{
+> 			checkInterrupt();
+> 			// We don't need to look at resources we've already looked at.
+> 			if (!m_failedSet.contains(resources[resIdx]))
+> 			{
+> 				Capability[] caps = resources[resIdx].getCapabilities();
+> 				for (int capIdx = 0; (caps != null) && (capIdx < caps.length); capIdx++)
+> 				{
+> 					if (req.isSatisfied(caps[capIdx]))
+> 					{
+> 						matchingCapabilities.add(new ResourceCapabilityImpl(
+> 								resources[resIdx], caps[capIdx]));
+> 					}
+> 				}
+> 			}
+> 		}
+382,400c586,587
+<         for (int resIdx = 0; (resources != null) && (resIdx < resources.length); resIdx++)
+<         {
+<             checkInterrupt();
+<             // We don't need to look at resources we've already looked at.
+<             if (!m_failedSet.contains(resources[resIdx]))
+<             {
+<                 Capability[] caps = resources[resIdx].getCapabilities();
+<                 for (int capIdx = 0; (caps != null) && (capIdx < caps.length); capIdx++)
+<                 {
+<                     if (req.isSatisfied(caps[capIdx]))
+<                     {
+<                         matchingCapabilities.add(new ResourceCapabilityImpl(resources[resIdx], caps[capIdx]));
+<                     }
+<                 }
+<             }
+<         }
+< 
+<         return matchingCapabilities;
+<     }
+---
+> 		return matchingCapabilities;
+> 	}

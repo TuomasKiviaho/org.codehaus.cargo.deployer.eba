@@ -1,0 +1,47 @@
+35d34
+< import java.util.HashMap;
+37a37,38
+> import java.util.LinkedHashMap;
+> import java.util.LinkedHashSet;
+174,175d174
+<               Map<String, String> attribs = new HashMap<String, String>();
+<               attribs.put(Constants.VERSION_ATTRIBUTE, "[" + r.getVersion() + ',' + r.getVersion() + "]");
+296c295
+<      Set<BundleInfo> result = new HashSet<BundleInfo>();
+---
+>       Set<BundleInfo> result = new LinkedHashSet<BundleInfo>();
+337d335
+<     Map<String, String> attribs = new HashMap<String, String>();
+340c338
+<     attribs.put(Resource.VERSION, range.toString());
+---
+>     Map<String, String> attribs = Collections.singletonMap(Resource.VERSION, range.toString());
+408,409c406
+<       directives = new HashMap<String, String>();
+<       directives.put(Constants.RESOLUTION_DIRECTIVE, Constants.RESOLUTION_OPTIONAL);
+---
+>       directives = Collections.singletonMap(Constants.RESOLUTION_DIRECTIVE, Constants.RESOLUTION_OPTIONAL);
+435c432
+<     Map<String, List<Resource>> resourcesByName = new HashMap<String, List<Resource>>();
+---
+>     Map<String, List<Resource>> resourcesByName = new LinkedHashMap<String, List<Resource>>();
+538c535
+<     Map<String, String> unsatisfiedRequirements = new HashMap<String, String>();
+---
+>     Map<String, String> unsatisfiedRequirements = new LinkedHashMap<String, String>();
+549c546
+<       Map<String, String> customAttrs = new HashMap<String, String>();
+---
+>       Map<String, String> customAttrs = new LinkedHashMap<String, String>();
+632c629
+<     Map<Requirement,Set<String>> req_resources = new HashMap<Requirement,Set<String>>();
+---
+>     Map<Requirement,Set<String>> req_resources = new LinkedHashMap<Requirement,Set<String>>();
+641c638
+<         values = new HashSet<String>();
+---
+>         values = new LinkedHashSet<String>();
+674c671
+<       Map<String,Set<String>> result = new HashMap<String, Set<String>>();
+---
+>       Map<String,Set<String>> result = new LinkedHashMap<String, Set<String>>();

@@ -1,0 +1,14 @@
+26c26
+< import java.util.HashMap;
+---
+> import java.util.LinkedHashMap;
+29d28
+< import java.util.Map.Entry;
+55c54
+<     HashMap<String, String> props = new HashMap<String, String>();
+---
+>     Map<String, String> props = new LinkedHashMap<String, String>();
+59c58
+<       Set<Entry<Object, Object>> attributeSet =  mainAttrs.entrySet(); 
+---
+>       Set<Map.Entry<Object, Object>> attributeSet =  mainAttrs.entrySet(); 

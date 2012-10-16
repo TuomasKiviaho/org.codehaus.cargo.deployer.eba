@@ -1,0 +1,27 @@
+36a37,38
+> import java.util.LinkedHashMap;
+> import java.util.LinkedHashSet;
+255c257
+<     Collection<ModelledResource> sharedBundles = new HashSet<ModelledResource>();
+---
+>     Collection<ModelledResource> sharedBundles = new LinkedHashSet<ModelledResource>();
+384c386
+<     Collection<ImportedBundle> result = new HashSet<ImportedBundle>();
+---
+>     Collection<ImportedBundle> result = new LinkedHashSet<ImportedBundle>();
+404c406
+<     Map<String,String> result = new HashMap<String, String>();
+---
+>     Map<String,String> result = new LinkedHashMap<String, String>();
+479c481
+<         serviceProperties = new HashMap<String, String>();
+---
+>         serviceProperties = new LinkedHashMap<String, String>();
+482c484
+<       exportedServices.add (modellingManager.getExportedService("", 0, ifaces, new HashMap<String, Object>(serviceProperties)));
+---
+>       exportedServices.add (modellingManager.getExportedService("", 0, ifaces, new LinkedHashMap<String, Object>(serviceProperties)));
+614c616
+<     Set<ImportedBundle> result = new HashSet<ImportedBundle>();
+---
+>     Set<ImportedBundle> result = new LinkedHashSet<ImportedBundle>();

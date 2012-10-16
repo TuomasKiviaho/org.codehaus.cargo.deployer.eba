@@ -1,0 +1,19 @@
+22a23
+> import java.util.Dictionary;
+38a40
+> import org.osgi.framework.Constants;
+176c178,180
+<         if (b.getState() != Bundle.ACTIVE) { 
+---
+>         Dictionary<String, String> headers = b.getHeaders();
+>         String fragmentHost = headers.get(Constants.FRAGMENT_HOST);
+>         if (fragmentHost == null && b.getState() != Bundle.ACTIVE) { 
+201c205,209
+<       b.stop();
+---
+>       Dictionary<String, String> headers = b.getHeaders();
+>       String fragmentHost = headers.get(Constants.FRAGMENT_HOST);
+>       if (fragmentHost == null) {
+>         b.stop();
+>       }
+
