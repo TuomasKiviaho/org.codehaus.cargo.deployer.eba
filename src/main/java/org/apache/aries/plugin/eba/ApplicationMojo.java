@@ -54,27 +54,37 @@ public class ApplicationMojo extends MojoSupport
                     Attributes mainAttributes = manifest.getMainAttributes();
                     String bundleSymbolicName =
                         mainAttributes.getValue(Constants.BUNDLE_SYMBOLICNAME);
-                    String bundleVersion = mainAttributes.getValue(Constants.BUNDLE_VERSION);
-                    if (bundleSymbolicName != null && bundleVersion != null)
+                    if (bundleSymbolicName != null)
                     {
-                        Version version = new Version(bundleVersion);
-                        String artifactVersion = artifact.getVersion();
-                        VersionRange versionRange =
-                            new VersionRange(Analyzer.cleanupVersion(artifactVersion));
                         if (applicationContent.length() > 0)
                         {
                             applicationContent.append(",");
                         }
-                        String token =
-                            String.format("%s;%s=\"%s\"", bundleSymbolicName,
-                                Constants.VERSION_ATTRIBUTE, versionRange.includes(version)
-                                    ? versionRange : version);
-                        applicationContent.append(token);
+                        applicationContent.append(bundleSymbolicName);
+                        String bundleVersion = mainAttributes.getValue(Constants.BUNDLE_VERSION);
+                        if (bundleVersion != null)
+                        {
+                            Version version = new Version(bundleVersion);
+                            String artifactVersion = artifact.getVersion();
+                            VersionRange versionRange =
+                                new VersionRange(Analyzer.cleanupVersion(artifactVersion));
+                            applicationContent.append(';');
+                            applicationContent.append(Constants.VERSION_ATTRIBUTE);
+                            applicationContent.append('=');
+                            applicationContent.append('"');
+                            applicationContent.append(versionRange.includes(version)
+                                ? versionRange : version);
+                            applicationContent.append('"');
+                        }
                         boolean optional = artifact.isOptional();
                         if (optional)
                         {
-                            applicationContent.append(String.format(";%s:=\"%s\"",
-                                Constants.RESOLUTION_DIRECTIVE, Constants.RESOLUTION_OPTIONAL));
+                            applicationContent.append(';');
+                            applicationContent.append(Constants.RESOLUTION_DIRECTIVE);
+                            applicationContent.append('=');
+                            applicationContent.append('"');
+                            applicationContent.append(Constants.RESOLUTION_OPTIONAL);
+                            applicationContent.append('"');
                         }
                     }
                 }
