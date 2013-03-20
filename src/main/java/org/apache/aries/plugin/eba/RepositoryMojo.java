@@ -66,8 +66,11 @@ public class RepositoryMojo extends MojoSupport
                 }
                 if (resource != null)
                 {
-                    String size = Long.toString(file.length());
-                    resource.put(Resource.SIZE, size, null);
+                    if (!file.isDirectory())
+                    {
+                        String size = Long.toString(file.length());
+                        resource.put(Resource.SIZE, size, null);
+                    }
                     URI uri = file.toURI();
                     resource.put(Resource.URI, "reference:" + uri.toString(), null);
                     repository.addResource(resource);
