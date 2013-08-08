@@ -13,9 +13,9 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.osgi.framework.Constants;
 
-import aQute.lib.osgi.Analyzer;
-import aQute.libg.version.Version;
-import aQute.libg.version.VersionRange;
+import aQute.bnd.osgi.Analyzer;
+import aQute.bnd.version.Version;
+import aQute.bnd.version.VersionRange;
 
 /**
  * @goal application
