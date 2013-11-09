@@ -29,7 +29,6 @@ import org.apache.maven.shared.dependency.graph.filter.DependencyNodeFilter;
 import org.apache.maven.shared.dependency.graph.traversal.CollectingDependencyNodeVisitor;
 import org.apache.maven.shared.dependency.graph.traversal.DependencyNodeVisitor;
 import org.apache.maven.shared.dependency.graph.traversal.FilteringDependencyNodeVisitor;
-
 public abstract class MojoSupport extends AbstractMojo
 {
 
@@ -265,12 +264,12 @@ public abstract class MojoSupport extends AbstractMojo
             for (DependencyNode dependencyNode : dependencyNodes)
             {
                 Artifact dependencyArtifact = dependencyNode.getArtifact();
-                String id = dependencyArtifact.getId();
+                String id = dependencyArtifact.getDependencyConflictId();
                 artifactIds.add(id);
             }
             for (Artifact artifact : projectArtifacts)
             {
-                String id = artifact.getId();
+                String id = artifact.getDependencyConflictId();
                 if (artifactIds.contains(id))
                 {
                     artifacts.add(artifact);

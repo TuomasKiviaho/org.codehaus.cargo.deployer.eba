@@ -4,10 +4,10 @@
 	<parent>
 		<groupId>org.codehaus.cargo</groupId>
 		<artifactId>cargo-core</artifactId>
-		<version>1.4.3</version>
+		<version>1.4.4</version>
 	</parent>
 	<artifactId>cargo-deployer-eba</artifactId>
-	<version>1.4.3-SNAPSHOT</version>
+	<version>1.4.4-SNAPSHOT</version>
 	<packaging>maven-plugin</packaging>
 	<name>Cargo OSGi Container - Aries EBA Deployer</name>
 	<description>Apache Aries EBA Deployer for OSGi Service Platform Release 4 Version 4.3</description>
@@ -227,7 +227,7 @@
 							<originalFile>${project.build.directory}/generated-sources/org/apache/aries/application/resolver/obr/OBRAriesResolver.java</originalFile>
 						</configuration>
 					</execution>
-						<execution>
+					<execution>
 						<id>FELIX-3671/org.apache.felix.bundlerepository.impl.ResolverImpl</id>
 						<phase>process-sources</phase>
 						<goals>
@@ -447,14 +447,23 @@
 			<artifactId>maven-project</artifactId>
 			<version>2.2.1</version>
 		</dependency>
-
-		<!-- <dependency> <groupId>org.sonatype.aether</groupId> <version>1.13.1</version> 
-			<artifactId>aether-util</artifactId> <scope>provided</scope> </dependency> -->
 		<dependency>
 			<groupId>org.apache.maven</groupId>
 			<artifactId>maven-artifact</artifactId>
 			<version>2.2.1</version>
 		</dependency>
+		<!--
+		<dependency>
+			<groupId>org.eclipse.aether</groupId>
+			<artifactId>aether-util</artifactId>
+			<version>0.9.0.M2</version> 
+			<exclusions>
+				<exclusion>
+					<groupId>org.eclipse.aether</groupId>
+					<artifactId>aether-api</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>-->
 		<dependency>
 			<groupId>org.apache.maven.shared</groupId>
 			<artifactId>maven-dependency-tree</artifactId>
